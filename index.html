@@ -1,70 +1,196 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Convertidor Brrrrrr</title>
+    <title>Convertidor y Calculadora Woooo</title>
 </head>
 <body>
-    <h1>Convertidor Brrrrrr</h1>
+    <h1>Convertidor y Calculadora Woooo</h1>
 
-    <label for="inputField">Ingresá un valor:</label>
-    <input type="text" id="inputField">
+    <!-- Sección de Conversión -->
+    <section>
+        <h2>Convertidor go Brrrrrr</h2>
+
+        <label for="inputField">Ingrese Valor:</label>
+        <input type="text" id="inputField">
+        
+        <select id="inputType">
+            <option value="hex">Hexadecimal</option>
+            <option value="binary">Binario</option>
+            <option value="decimal">Decimal</option>
+        </select>
+        
+        <button onclick="convertir()">Convertir</button>
+
+        <h3>Conversiones:</h3>
+        <p id="hexToBinary"></p>
+        <p id="binaryToHex"></p>
+        <p id="hexToDecimal"></p>
+        <p id="decimalToHex"></p>
+        <p id="binaryToDecimal"></p>
+        <p id="decimalToBinary"></p>
+    </section>
+
+    <!-- Sección de Calculadora -->
+    <section>
+        <h2>Calculadora go Brrrrrr</h2>
     
-    <select id="inputType">
-        <option value="hex">Hexadecimal</option>
-        <option value="binary">Binario</option>
-        <option value="decimal">Decimal</option>
-    </select>
+        <label for="calcInput1">Primer Valor:</label>
+        <input type="text" id="calcInput1">
+        
+        <select id="calcInputType1">
+            <option value="hex">Hexadecimal</option>
+            <option value="binary">Binario</option>
+            <option value="decimal">Decimal</option>
+        </select>
     
-    <button onclick="convert()">Convertir</button>
-
-    <h2>Conversiones:</h2>
-    <p id="hexToBinary"></p>
-    <p id="binaryToHex"></p>
-    <p id="hexToDecimal"></p>
-    <p id="decimalToHex"></p>
-    <p id="binaryToDecimal"></p>
-    <p id="decimalToBinary"></p>
-
+        <label for="calcOperator">Operador:</label>
+        <select id="calcOperator">
+            <option value="add">+</option>
+            <option value="subtract">-</option>
+            <option value="multiply">*</option>
+            <option value="divide">/</option>
+        </select>
+    
+        <label for="calcInput2">Segundo Valor:</label>
+        <input type="text" id="calcInput2">
+        
+        <select id="calcInputType2">
+            <option value="hex">Hexadecimal</option>
+            <option value="binary">Binario</option>
+            <option value="decimal">Decimal</option>
+        </select>
+        
+        <button onclick="calcular()">Calcular</button>
+    
+        <h3>Resultado:</h3>
+        <p id="calcResultHex"></p>
+        <p id="calcResultBinary"></p>
+        <p id="calcResultDecimal"></p>
+    </section>
     <script>
-        function convert() {
+        function convertir() {
             const inputField = document.getElementById('inputField').value;
             const inputType = document.getElementById('inputType').value;
 
             // Limpiar los resultados previos
-            clearConversions();
+            limpiarConversiones();
 
-            // Hacer las conversiones en base al tipo de input.
+            // Realizar las conversiones basadas en el tipo de entrada
             switch (inputType) {
                 case 'hex':
-                    displayConversion('hexToBinary', parseInt(inputField, 16).toString(2), 'Hexadecimal a Binario');
-                    displayConversion('hexToDecimal', parseInt(inputField, 16).toString(10), 'Hexadecimal a Decimal');
+                    mostrarConversion('hexToBinary', parseInt(inputField, 16).toString(2), 'Hexadecimal a Binario');
+                    mostrarConversion('hexToDecimal', parseInt(inputField, 16).toString(10), 'Hexadecimal a Decimal');
                     break;
                 case 'binary':
-                    displayConversion('binaryToHex', parseInt(inputField, 2).toString(16).toUpperCase(), 'Binario a Hexadecimal');
-                    displayConversion('binaryToDecimal', parseInt(inputField, 2).toString(10), 'Binario a Decimal');
+                    mostrarConversion('binaryToHex', parseInt(inputField, 2).toString(16).toUpperCase(), 'Binario a Hexadecimal');
+                    mostrarConversion('binaryToDecimal', parseInt(inputField, 2).toString(10), 'Binario a Decimal');
                     break;
                 case 'decimal':
-                    displayConversion('decimalToBinary', parseInt(inputField, 10).toString(2), 'Decimal a Binario');
-                    displayConversion('decimalToHex', parseInt(inputField, 10).toString(16).toUpperCase(), 'Decimal a Hexadecimal');
+                    mostrarConversion('decimalToBinary', parseInt(inputField, 10).toString(2), 'Decimal a Binario');
+                    mostrarConversion('decimalToHex', parseInt(inputField, 10).toString(16).toUpperCase(), 'Decimal a Hexadecimal');
                     break;
                 default:
-                    // Tipo de input no válido
-                    console.log('Invalid input type');
+                    // Tipo de entrada no válido
+                    console.log('Tipo de entrada no válido');
             }
         }
 
-        function clearConversions() {
-            const conversionElements = document.querySelectorAll('p');
-            conversionElements.forEach(element => {
-                element.textContent = '';
+        function limpiarConversiones() {
+            const elementosConversion = document.querySelectorAll('p');
+            elementosConversion.forEach(elemento => {
+                elemento.textContent = '';
             });
         }
 
-        function displayConversion(id, result, label) {
-            const element = document.getElementById(id);
-            if (result !== 'NaN') {
-                element.textContent = `${label}: ${result}`;
+        function mostrarConversion(id, resultado, etiqueta) {
+            const elemento = document.getElementById(id);
+            if (!isNaN(resultado)) {
+                elemento.textContent = `${etiqueta}: ${resultado}`;
             }
+        }
+
+        function calcular() {
+        const calcInput1 = document.getElementById('calcInput1').value;
+        const calcInputType1 = document.getElementById('calcInputType1').value;
+        const calcOperator = document.getElementById('calcOperator').value;
+        const calcInput2 = document.getElementById('calcInput2').value;
+        const calcInputType2 = document.getElementById('calcInputType2').value;
+
+        // Limpiar el resultado de cálculo anterior
+        limpiarResultadoCalculo();
+
+        // Convertir los valores de entrada a decimales
+        const valor1 = convertirADecimal(calcInput1, calcInputType1);
+        const valor2 = convertirADecimal(calcInput2, calcInputType2);
+
+        if (!isNaN(valor1) && !isNaN(valor2)) {
+            let resultado;
+            switch (calcOperator) {
+                case 'add':
+                    resultado = valor1 + valor2;
+                    break;
+                case 'subtract':
+                    resultado = valor1 - valor2;
+                    break;
+                case 'multiply':
+                    resultado = valor1 * valor2;
+                    break;
+                case 'divide':
+                    if (valor2 !== 0) {
+                        resultado = valor1 / valor2;
+                    } else {
+                        mostrarResultadoCalculo('No se permite la división por cero');
+                        return;
+                    }
+                    break;
+                default:
+                    mostrarResultadoCalculo('Operador no válido');
+                    return;
+            }
+
+                mostrarResultadoCalculo(resultado);
+            } else {
+                mostrarResultadoCalculo('Valores de entrada no válidos');
+            }
+        }
+
+        function mostrarResultadoCalculo(resultado) {
+            // Mostrar el resultado en Hexadecimal
+            const resultadoHex = resultado.toString(16).toUpperCase();
+            const calcResultHex = document.getElementById('calcResultHex');
+            calcResultHex.textContent = `Resultado Hexadecimal: 0x${resultadoHex}`;
+
+            // Mostrar el resultado en Binario
+            const resultadoBinary = resultado.toString(2);
+            const calcResultBinary = document.getElementById('calcResultBinary');
+            calcResultBinary.textContent = `Resultado Binario: ${resultadoBinary}`;
+
+            // Mostrar el resultado en Decimal
+            const calcResultDecimal = document.getElementById('calcResultDecimal');
+            calcResultDecimal.textContent = `Resultado Decimal: ${resultado}`;
+        }
+
+        function convertirADecimal(valor, tipo) {
+            switch (tipo) {
+                case 'hex':
+                    return parseInt(valor, 16);
+                case 'binary':
+                    return parseInt(valor, 2);
+                case 'decimal':
+                    return parseFloat(valor);
+                default:
+                    return NaN;
+            }
+        }
+
+        function limpiarResultadoCalculo() {
+            const calcResultHex = document.getElementById('calcResultHex');
+            const calcResultBinary = document.getElementById('calcResultBinary');
+            const calcResultDecimal = document.getElementById('calcResultDecimal');
+            
+            calcResultHex.textContent = '';
+            calcResultBinary.textContent = '';
+            calcResultDecimal.textContent = '';
         }
     </script>
 </body>
