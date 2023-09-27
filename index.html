@@ -205,12 +205,12 @@
             break;
         case 'sm':
             // Convertir Signo-Magnitud a Decimal
-            const smValue = convertirSMaDecimal(inputField);
+            const smValue = convertirADecimal(inputField, inputType);
             mostrarConversion('smToDecimal', smValue.toString(), 'Signo-Magnitud a Decimal');
             break;
         case 'ca2':
             // Convertir Complemento a 2 (CA2) a Decimal
-            const ca2Value = convertirCA2aDecimal(inputField);
+            const ca2Value = convertirADecimal(inputField, inputType);
             mostrarConversion('ca2ToDecimal', ca2Value.toString(), 'Complemento a 2 (CA2) a Decimal');
             break;
         default:
