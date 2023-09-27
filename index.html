@@ -78,6 +78,29 @@
         <p id="calcResultBinary"></p>
         <p id="calcResultDecimal"></p>
     </section>
+
+    <!-- Sección de Rango -->
+    <section>
+        <h2>Rango (PF Y EX wip)</h2>
+
+        <label for="representationType">Tipo:</label>
+        <select id="representationType">
+            <option value="bss">BSS</option>
+            <option value="sm">Signo Magnitud (SM)</option>
+            <option value="ca2">Complemento a 2 (CA2)</option>
+            <option value="fixedPoint">Punto Fijo</option>
+            <option value="excess">Exceso</option>
+        </select>
+    
+        <label for="representationNumber">Numero:</label>
+        <input type="text" id="representationNumber">
+
+        <button onclick="calcularRepresentacion()">Calcular</button>
+
+        <h3>Resultado:</h3>
+        <p id="representationMax"></p>
+        <p id="representationMin"></p>
+    </section>
      <script> 
          function convertir() { 
              const inputField = document.getElementById('inputField').value; 
@@ -113,78 +136,139 @@
              }); 
          } 
   
-         function mostrarConversion(id, resultado, etiqueta) { 
-             const elemento = document.getElementById(id); 
-             if (!isNaN(resultado)) { 
-                 elemento.textContent = `${etiqueta}: ${resultado}`; 
-             } 
-         } 
+        function mostrarConversion(id, resultado, etiqueta) { 
+            const elemento = document.getElementById(id); 
+            if (!isNaN(resultado)) { 
+                elemento.textContent = `${etiqueta}: ${resultado}`; 
+            } 
+        }
+
+        function calcularRepresentacion() {
+            const representationType = document.getElementById('representationType').value;
+            const representationNumber = document.getElementById('representationNumber').value;
+
+            // Limpiar resultados previos
+            limpiarResultadosRepresentacion();
+
+            if (!isNaN(representationNumber) && parseInt(representationNumber) >= 1) {
+            let representationMax, representationMin;
+
+            switch (representationType) {
+                case 'bss':
+                    representationMax = Math.pow(2, parseInt(representationNumber)) - 1;
+                    representationMin = 0;
+                    break;
+                case 'sm':
+                    representationMax = Math.pow(2, parseInt(representationNumber) - 1) - 1;
+                    representationMin = -Math.pow(2, parseInt(representationNumber) - 1) + 1;
+                    break;
+                case 'ca2':
+                    representationMax = Math.pow(2, parseInt(representationNumber) - 1) - 1;
+                    representationMin = -Math.pow(2, parseInt(representationNumber) - 1);
+                    break;
+                case 'fixedPoint':
+                    const bits = parseInt(representationNumber);
+                    const fractionalBits = bits / 2;
+                    representationMax = Math.pow(2, fractionalBits) - 1;
+                    representationMin = -Math.pow(2, fractionalBits);
+                    break;
+                case 'excess':
+                    const excessValue = parseInt(representationNumber);
+                    representationMax = Math.pow(2, excessValue) - 1;
+                    representationMin = -Math.pow(2, excessValue);
+                    break;
+                default:
+                    mostrarResultadoRepresentacion('Representación no válida');
+                    return;
+            }
+            mostrarResultadoRepresentacion(representationMax, representationMin);
+            }else {
+                mostrarResultadoRepresentacion("Número no válido");
+            }
+        }
+
+        function limpiarResultadosRepresentacion() 
+        {
+            const representationMax = document.getElementById('representationMax');
+            const representationMin = document.getElementById('representationMin');
+
+            representationMax.textContent = '';
+            representationMin.textContent = '';
+        }
+
+        function mostrarResultadoRepresentacion(max, min) {
+            const representationMax = document.getElementById('representationMax');
+            const representationMin = document.getElementById('representationMin');
+
+            representationMax.textContent = `Máximo: ${max}`;
+            representationMin.textContent = `Mínimo: ${min}`;
+        }
   
-         function calcular() { 
-         const calcInput1 = document.getElementById('calcInput1').value; 
-         const calcInputType1 = document.getElementById('calcInputType1').value; 
-         const calcOperator = document.getElementById('calcOperator').value; 
-         const calcInput2 = document.getElementById('calcInput2').value; 
-         const calcInputType2 = document.getElementById('calcInputType2').value; 
+        function calcular() { 
+        const calcInput1 = document.getElementById('calcInput1').value; 
+        const calcInputType1 = document.getElementById('calcInputType1').value; 
+        const calcOperator = document.getElementById('calcOperator').value; 
+        const calcInput2 = document.getElementById('calcInput2').value; 
+        const calcInputType2 = document.getElementById('calcInputType2').value; 
+
+        // Limpiar el resultado de cálculo anterior 
+        limpiarResultadoCalculo(); 
+
+        // Convertir los valores de entrada a decimales 
+        const valor1 = convertirADecimal(calcInput1, calcInputType1); 
+        const valor2 = convertirADecimal(calcInput2, calcInputType2); 
   
-         // Limpiar el resultado de cálculo anterior 
-         limpiarResultadoCalculo(); 
+        if (!isNaN(valor1) && !isNaN(valor2)) { 
+            let resultado; 
+            switch (calcOperator) { 
+                case 'add': 
+                    resultado = valor1 + valor2; 
+                    break; 
+                case 'subtract': 
+                    resultado = valor1 - valor2; 
+                    break; 
+                case 'multiply': 
+                    resultado = valor1 * valor2; 
+                    break; 
+                case 'divide': 
+                    if (valor2 !== 0) { 
+                        resultado = valor1 / valor2; 
+                    } else { 
+                        mostrarResultadoCalculo('No se permite la división por cero'); 
+                        return; 
+                    } 
+                    break; 
+                default: 
+                    mostrarResultadoCalculo('Operador no válido'); 
+                    return; 
+            } 
+
+                mostrarResultadoCalculo(resultado); 
+            } else { 
+                mostrarResultadoCalculo('Valores de entrada no válidos'); 
+            } 
+        } 
   
-         // Convertir los valores de entrada a decimales 
-         const valor1 = convertirADecimal(calcInput1, calcInputType1); 
-         const valor2 = convertirADecimal(calcInput2, calcInputType2); 
-  
-         if (!isNaN(valor1) && !isNaN(valor2)) { 
-             let resultado; 
-             switch (calcOperator) { 
-                 case 'add': 
-                     resultado = valor1 + valor2; 
-                     break; 
-                 case 'subtract': 
-                     resultado = valor1 - valor2; 
-                     break; 
-                 case 'multiply': 
-                     resultado = valor1 * valor2; 
-                     break; 
-                 case 'divide': 
-                     if (valor2 !== 0) { 
-                         resultado = valor1 / valor2; 
-                     } else { 
-                         mostrarResultadoCalculo('No se permite la división por cero'); 
-                         return; 
-                     } 
-                     break; 
-                 default: 
-                     mostrarResultadoCalculo('Operador no válido'); 
-                     return; 
-             } 
-  
-                 mostrarResultadoCalculo(resultado); 
-             } else { 
-                 mostrarResultadoCalculo('Valores de entrada no válidos'); 
-             } 
-         } 
-  
-         function mostrarResultadoCalculo(resultado) { 
-             // Mostrar el resultado en Hexadecimal 
-             const resultadoHex = resultado.toString(16).toUpperCase(); 
-             const calcResultHex = document.getElementById('calcResultHex'); 
-             calcResultHex.textContent = `Resultado Hexadecimal: 0x${resultadoHex}`; 
-  
-             // Mostrar el resultado en Binario 
-             const resultadoBinary = resultado.toString(2); 
-             const calcResultBinary = document.getElementById('calcResultBinary'); 
-             calcResultBinary.textContent = `Resultado Binario: ${resultadoBinary}`; 
-  
-             // Mostrar el resultado en Decimal 
-             const calcResultDecimal = document.getElementById('calcResultDecimal'); 
-             calcResultDecimal.textContent = `Resultado Decimal: ${resultado}`; 
-         } 
+        function mostrarResultadoCalculo(resultado) { 
+            // Mostrar el resultado en Hexadecimal 
+            const resultadoHex = resultado.toString(16).toUpperCase(); 
+            const calcResultHex = document.getElementById('calcResultHex'); 
+            calcResultHex.textContent = `Resultado Hexadecimal: 0x${resultadoHex}`; 
+
+            // Mostrar el resultado en Binario 
+            const resultadoBinary = resultado.toString(2); 
+            const calcResultBinary = document.getElementById('calcResultBinary'); 
+            calcResultBinary.textContent = `Resultado Binario: ${resultadoBinary}`; 
+
+            // Mostrar el resultado en Decimal 
+            const calcResultDecimal = document.getElementById('calcResultDecimal'); 
+            calcResultDecimal.textContent = `Resultado Decimal: ${resultado}`; 
+        } 
   
                   
-         function convertir() {
-    const inputField = document.getElementById('inputField').value;
-    const inputType = document.getElementById('inputType').value;
+        function convertir() {
+            const inputField = document.getElementById('inputField').value;
+            const inputType = document.getElementById('inputType').value;
 
     // Limpiar los resultados previos
     limpiarConversiones();
